@@ -1,5 +1,5 @@
-const { resolve } = require('path');
 const env = require('./env');
+const { resolve } = require('path');
 
 module.exports = {
   env,

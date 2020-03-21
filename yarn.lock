@@ -2744,6 +2744,11 @@ damerau-levenshtein@^1.0.4:
   resolved "https://registry.yarnpkg.com/damerau-levenshtein/-/damerau-levenshtein-1.0.6.tgz#143c1641cb3d85c60c32329e26899adea8701791"
   integrity sha512-JVrozIeElnj3QzfUIt8tB8YMluBJom4Vw9qTPpjGYQ9fYlB3D/rb6OordUxf3xeFB35LKWs0xqcO5U6ySvBtug==
 
+date-fns@^2.9.0:
+  version "2.11.0"
+  resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-2.11.0.tgz#ec2b44977465b9dcb370021d5e6c019b19f36d06"
+  integrity sha512-8P1cDi8ebZyDxUyUprBXwidoEtiQAawYPGvpfb+Dg0G6JrQ+VozwOmm91xYC0vAv1+0VmLehEPb+isg4BGUFfA==
+
 dayjs@^1.8.23:
   version "1.8.23"
   resolved "https://registry.yarnpkg.com/dayjs/-/dayjs-1.8.23.tgz#07b5a8e759c4d75ae07bdd0ad6977f851c01e510"
@@ -5303,6 +5308,13 @@ next@9.3.0:
     webpack-dev-middleware "3.7.0"
     webpack-hot-middleware "2.25.0"
     webpack-sources "1.4.3"
+
+nextjs-sitemap-generator@^0.5.0:
+  version "0.5.0"
+  resolved "https://registry.yarnpkg.com/nextjs-sitemap-generator/-/nextjs-sitemap-generator-0.5.0.tgz#0a5b847b2354f4df8967bfedb0a41b9cc6233e0e"
+  integrity sha512-mURzAVQTA1nQfFyQl+r2To2/paH0CLPkFO2gedRgZv7oaty6Dw66WVlb3yFP4KiwSyczzeotecdm+sWA2Ejbmw==
+  dependencies:
+    date-fns "^2.9.0"
 
 nice-try@^1.0.4:
   version "1.0.5"
