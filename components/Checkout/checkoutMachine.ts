@@ -23,7 +23,6 @@ type Context = Omit<CartObject, 'products'> & {
   authenticationError: string;
   formErrors: Map<keyof FormData, string>;
   hasProducts: boolean;
-  initialDonation: number;
   paymentMethod: 'card' | 'ideal';
   paymentMethodValid: boolean;
 };
@@ -77,7 +76,6 @@ const getCheckoutMachine = ({ cart }: { cart: CartObject }) => {
     authenticationError: '',
     formErrors: new Map(),
     hasProducts: !!cart.products.length,
-    initialDonation: cart.donation,
     paymentMethod: 'card',
     paymentMethodValid: false,
   };

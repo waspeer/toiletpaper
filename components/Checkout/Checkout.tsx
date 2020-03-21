@@ -54,7 +54,6 @@ const Checkout = ({ lineItems }: Props) => {
     billingDetails,
     donation,
     formErrors: formErrorMap,
-    initialDonation,
     paymentMethodValid,
     paymentMethod,
     shippingCosts,
@@ -152,7 +151,6 @@ const Checkout = ({ lineItems }: Props) => {
           <DonationForm
             disabled={current.matches('authenticating')}
             currencyCode={currencyCode}
-            initialDonation={initialDonation}
             value={donation}
             onChange={handleDonationChange}
           />

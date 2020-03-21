@@ -10,40 +10,13 @@ import { DonationLabel, FormWrapper, InputWrapper, Symbol, Wrapper } from './_st
 interface Props {
   disabled: boolean;
   currencyCode: string;
-  initialDonation: number;
   onChange: (value: number) => void;
   value: number;
 }
 
-type Status = 'INITIAL' | 'LOWERED' | 'NOT_YET' | 'REMOVED' | 'TOPPED' | 'UNKNOWN';
-
-const calculateStatus = ({
-  initialDonation,
-  value,
-}: Pick<Props, 'initialDonation' | 'value'>): Status => {
-  if (initialDonation !== 0 && value === 0) return 'REMOVED';
-  if (initialDonation === 0 && value === 0) return 'NOT_YET';
-  if (initialDonation === value) return 'INITIAL';
-  if (initialDonation > value) return 'LOWERED';
-  if (initialDonation < value) return 'TOPPED';
-  return 'UNKNOWN';
-};
-
-const message: Map<Status, JSX.Element> = new Map([
+const message: Map<'INITIAL' | 'DONATING', JSX.Element> = new Map([
   [
     'INITIAL',
-    <>
-      OMG!{' '}
-      <span role="img" aria-label="heart">
-        ♥️
-      </span>{' '}
-      You&apos;re the best for helping us out with this donation.
-      <br /> You can edit your donation below.
-    </>,
-  ],
-  ['LOWERED', <>Thank you for supporting us! :)</>],
-  [
-    'NOT_YET',
     <>
       There are no products in you cart yet!
       <br />
@@ -52,14 +25,7 @@ const message: Map<Status, JSX.Element> = new Map([
     </>,
   ],
   [
-    'REMOVED',
-    <>
-      Aah.. no donation this time.
-      <br /> We still love you and we hope you&apos;ll enjoy your order! :)
-    </>,
-  ],
-  [
-    'TOPPED',
+    'DONATING',
     <strong>
       <span role="img" aria-label="heart">
         ♥️
@@ -70,17 +36,14 @@ const message: Map<Status, JSX.Element> = new Map([
       </span>{' '}
     </strong>,
   ],
-  ['UNKNOWN', <>Thank you for supporting us! :) </>],
 ]);
 
-const DonationForm = ({ disabled, currencyCode, initialDonation, onChange, value }: Props) => {
-  const status = calculateStatus({ initialDonation, value });
-
+const DonationForm = ({ disabled, currencyCode, onChange, value }: Props) => {
   const currencySymbol = getSymbolFromCurrency(currencyCode);
 
   return (
     <Wrapper>
-      <Paragraph>{message.get(status)}</Paragraph>
+      <Paragraph>{message.get(value ? 'DONATING' : 'INITIAL')}</Paragraph>
       <FormWrapper>
         <DonationLabel htmlFor="donation">Donation</DonationLabel>
         <InputWrapper>
@@ -96,7 +59,7 @@ const DonationForm = ({ disabled, currencyCode, initialDonation, onChange, value
           <Symbol>{currencySymbol || currencyCode}</Symbol>
         </InputWrapper>
       </FormWrapper>
-      {status === 'TOPPED' && <Party donation={value} />}
+      {value && <Party donation={value} />}
     </Wrapper>
   );
 };
