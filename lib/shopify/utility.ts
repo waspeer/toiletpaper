@@ -4,6 +4,8 @@ import { shopifyClient } from '.';
 import { normalizeShopify } from './normalize';
 import { LineItem, NormalizedShopifyData } from './types';
 
+const DISCOUNT = (process.env.DISCOUNT && +process.env.DISCOUNT) || 0.81;
+
 export const getCollection = () =>
   shopifyClient.collection
     .fetchWithProducts(process.env.SHOPIFY_COLLECTION_ID || '')
@@ -18,14 +20,14 @@ export const mapCartProductsToLineItems = (
   return cartProducts.map(
     ([variantId, { quantity, donation }]): LineItem => {
       const variant = variants.byId[variantId];
-      const { title } = products.byId[variant.productId];
+      const productTitle = products.byId[variant.productId].title;
       return {
         donation,
         variant,
         quantity,
-        title,
+        title: `${productTitle} ${variant.title}`,
         get total() {
-          return +donation + +variant.price.amount * quantity;
+          return +donation + +variant.price.amount * DISCOUNT * quantity;
         },
       };
     },
