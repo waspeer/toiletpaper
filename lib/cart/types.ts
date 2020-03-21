@@ -27,7 +27,7 @@ export interface RemoveItemFunction {
   (variantId: string): void;
 }
 
-export interface UpdateDonationFunction {
+export interface SetDonationFunction {
   (donation: number): void;
 }
 
@@ -39,6 +39,6 @@ export type CartContext = Cart & {
   addItemToCart: AddItemFunction;
   emptyCart: () => void;
   removeItemFromCart: RemoveItemFunction;
+  setDonation: SetDonationFunction;
   setBillingDetails: SetBillingDetailsFunction;
-  updateDonation: UpdateDonationFunction;
 };

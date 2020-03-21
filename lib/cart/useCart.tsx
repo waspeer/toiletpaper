@@ -4,23 +4,8 @@ import React, { createContext, useContext } from 'react';
 
 import useLocalStorage from '#root/lib/hooks/useLocalStorage';
 
+import { EMPTY_CART, LOCAL_STORAGE_KEY, SHIPPING_COSTS } from './constants';
 import { Cart, CartContext as CartContextObject } from './types';
-
-const LOCAL_STORAGE_KEY = 'klangstof-toiletpaper-cart';
-const SHIPPING_COSTS = process.env.SHIPPING_COSTS ? +process.env.SHIPPING_COSTS : 10;
-const EMPTY_CART: Cart = {
-  billingDetails: {
-    address: '',
-    city: '',
-    country: '',
-    email: '',
-    name: '',
-    postalCode: '',
-  },
-  donation: 0,
-  products: [],
-  shippingCosts: 0,
-};
 
 const CartContext = createContext(EMPTY_CART as CartContextObject);
 
@@ -64,7 +49,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
       return Object.keys(cart.products).length === 0 ? 0 : SHIPPING_COSTS;
     },
 
-    updateDonation(donation) {
+    setDonation(donation) {
       setCart((previousCart) => ({ ...previousCart, donation }));
     },
   };
