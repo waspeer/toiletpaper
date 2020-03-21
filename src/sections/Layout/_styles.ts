@@ -24,6 +24,7 @@ export const Header = styled.div`
 
 export const Menu = styled.ul`
   list-style: none;
+  padding: 0;
 
   & a {
     color: ${colors.dark.fade(0.3)};

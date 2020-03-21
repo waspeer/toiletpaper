@@ -5,6 +5,7 @@ import { colors } from '#root/style';
 const wrapperStyles = css`
   margin: 0 auto;
   max-width: 500px;
+  padding: 1rem;
 `;
 
 export const Form = styled.form`
