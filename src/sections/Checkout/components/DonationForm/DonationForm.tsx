@@ -59,7 +59,7 @@ const DonationForm = ({ disabled, currencyCode, onChange, value }: Props) => {
           <Symbol>{currencySymbol || currencyCode}</Symbol>
         </InputWrapper>
       </FormWrapper>
-      {value && <Party donation={value} />}
+      {!!value && <Party donation={value} />}
     </Wrapper>
   );
 };

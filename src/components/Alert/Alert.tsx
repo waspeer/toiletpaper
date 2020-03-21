@@ -13,6 +13,9 @@ interface Props {
   /** Set default icon or provide a custom one */
   icon?: React.ReactNode | boolean;
 
+  /** ID for the wrapper */
+  id?: string;
+
   /** Content of Alert */
   message?: React.ReactNode;
 
@@ -23,7 +26,7 @@ interface Props {
   type?: 'error' | 'success' | 'warning';
 }
 
-const Alert = ({ closable, description, icon, message, style, type }: Props) => {
+const Alert = ({ closable, description, icon, id, message, style, type }: Props) => {
   const [closed, setClosed] = useState(false);
 
   if (closed) return null;
@@ -40,7 +43,7 @@ const Alert = ({ closable, description, icon, message, style, type }: Props) => 
   const close = () => setClosed(true);
 
   return (
-    <Wrapper className={classes} data-testid="alert" style={style}>
+    <Wrapper className={classes} data-testid="alert" id={id} style={style}>
       {icon === true && <DefaultIcon data-testid="alertIcon" />}
       {icon && icon !== true && icon}
       <Content>

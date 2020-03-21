@@ -3,7 +3,8 @@
 import { useElements, CardElement, IdealBankElement } from '@stripe/react-stripe-js';
 import { useMachine } from '@xstate/react';
 import { useRouter } from 'next/router';
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
+import smoothscroll from 'smoothscroll-polyfill';
 
 import Alert from '#root/components/Alert';
 import Button from '#root/components/Button';
@@ -104,6 +105,16 @@ const Checkout = ({ lineItems }: Props) => {
     [cart.products, formIsValid, paymentMethod, send, stripeElements],
   );
 
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      smoothscroll.polyfill();
+
+      if (current.matches('idle.error') && authenticationError) {
+        document.querySelector('#authenticationError')!.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+  }, [authenticationError, current]);
+
   if (current.matches('idle.initial') && paymentId && clientSecret) {
     send({ type: 'CHECK_PAYMENT_STATUS', clientSecret, paymentId, products: cart.products });
   }
@@ -112,15 +123,17 @@ const Checkout = ({ lineItems }: Props) => {
     !stripeElements ||
     (paymentId && clientSecret && current.matches('idle.initial')) ||
     current.matches('checkingStatus')
-  )
+  ) {
     return <Loading />;
+  }
 
-  if (current.matches('success'))
+  if (current.matches('success')) {
     return (
       <Wrapper>
         <Thanks />
       </Wrapper>
     );
+  }
 
   return (
     <Form onSubmit={handleSubmit}>
@@ -179,8 +192,9 @@ const Checkout = ({ lineItems }: Props) => {
         productTotal={productTotal}
         shippingCosts={shippingCosts}
       />
-      {current.matches('idle.error') && authenticationError && (
+      {current.matches('idle.error') && !!authenticationError && (
         <Alert
+          id="authenticationError"
           type="error"
           message="Payment could not be completed"
           description={authenticationError}
