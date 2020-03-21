@@ -11,9 +11,10 @@ import {
 } from '@stripe/stripe-js';
 import axios from 'axios';
 
+import { mapCartProductsToLineItems } from '#root/lib/cart';
 import { ok, fail } from '#root/lib/result';
 import { ErrorObject, FailedResult, Result } from '#root/lib/result/types';
-import { mapCartProductsToLineItems, getCollection } from '#root/lib/shopify';
+import { getCollection } from '#root/lib/shopify';
 import { NormalizedShopifyData } from '#root/lib/shopify/types';
 
 import * as Errors from './errors';

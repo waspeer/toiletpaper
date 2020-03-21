@@ -63,15 +63,23 @@ function calculateOrderTotal({ donation, lineItems, shippingCosts }: ServerOrder
   return Math.floor((safeDonation + productTotal + shippingCosts) * 100);
 }
 
-function makeMetaData({ donation, lineItems }: ServerOrder): Record<string, string> {
-  const parsedLineItems = lineItems.map(({ title, total, quantity }) => ({
+function makeMetaData({
+  billingDetails,
+  donation,
+  lineItems,
+  shippingCosts,
+}: ServerOrder): Record<string, string> {
+  const parsedLineItems = lineItems.map(({ discountPrice: total, title, quantity }) => ({
     title,
     total,
     quantity,
   }));
 
   return {
+    billingDetails: JSON.stringify(billingDetails, null, 2),
     donation: String(donation),
     order: JSON.stringify(parsedLineItems, null, 2),
+    shippingCosts: String(shippingCosts),
+    toiletpaper: 'true',
   };
 }

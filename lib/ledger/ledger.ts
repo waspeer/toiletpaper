@@ -15,7 +15,7 @@ subscribers.forEach((subscriber) => {
   subscriber(events);
 });
 
-export const handleServerRequest = ({ type, payload }: TriggerRequest) => {
+export const trigger = ({ type, payload }: TriggerRequest) => {
   if (type === 'RECEIVED_ORDER') {
     events.ReceivedOrder.post(payload);
   }

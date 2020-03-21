@@ -1,13 +1,25 @@
-import { PaymentIntent } from '@stripe/stripe-js';
 import { Evt } from 'evt';
 
 import { ServerRequestObject } from '#root/lib/server/types';
-import { ServerOrder } from '#root/lib/stripe/types';
 
 // EVENTS
 
-export type ReceivedOrderPayload = ServerOrder & {
-  status: PaymentIntent.Status;
+export type ReceivedOrderPayload = {
+  address: string;
+  city: string;
+  country: string;
+  currencyCode: string;
+  date: string;
+  donation: number;
+  email: string;
+  name: string;
+  paymentId: string;
+  postalCode: string;
+  processed: string;
+  products: { title: string; total: number; quantity: number }[];
+  quantity?: number;
+  shipping: number;
+  status: string;
 };
 
 export interface Events {

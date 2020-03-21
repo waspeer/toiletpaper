@@ -1,26 +1,24 @@
 /* eslint-disable @typescript-eslint/camelcase */
-import dayjs from 'dayjs';
 import { GoogleSpreadsheet, GoogleSpreadsheetWorksheet } from 'google-spreadsheet';
 
 import { ReceivedOrderPayload, Events } from '#root/lib/ledger/types';
 
 import credentials from './google-cred.json';
 
-interface SheetRow {
+export interface SheetRow {
   address: string;
   city: string;
   country: string;
   currencyCode: string;
   date: string;
-  donation: number;
   email: string;
   name: string;
   paymentId: string;
   postalCode: string;
   processed: string;
-  product?: string;
+  product: string;
+  total: number;
   quantity?: number;
-  shipping: number;
   status: string;
 }
 
@@ -44,56 +42,43 @@ export const orderAlreadyLogged = async (paymentId: string) => {
 };
 
 export const addOrder = async ({
-  billingDetails,
-  currencyCode,
   donation,
-  lineItems,
-  paymentId,
-  shippingCosts: shipping,
-  status,
+  products,
+  shipping,
+  ...rowData
 }: ReceivedOrderPayload) => {
   console.log('logger called');
 
   const sheet = await sheetPromise;
 
-  if (await orderAlreadyLogged(paymentId)) {
-    console.log('order already logged', paymentId);
+  if (await orderAlreadyLogged(rowData.paymentId)) {
+    console.log('order already logged', rowData.paymentId);
 
     return;
   }
 
-  const { address, city, country, email, name, postalCode } = billingDetails;
-  const date = dayjs().format('DD-MM-YYYY HH:mm:ss');
-  const rowData: SheetRow = {
-    address,
-    city,
-    country,
-    currencyCode,
-    date,
-    donation,
-    email,
-    name,
-    paymentId,
-    postalCode,
-    processed: '',
-    shipping,
-    status,
-  };
+  const rows = [] as SheetRow[];
 
-  if (!lineItems.length && donation) {
-    console.log('no products, just donation', donation);
+  rows.push(
+    ...products.map(({ quantity, title: product, total }) => ({
+      ...rowData,
+      product,
+      total,
+      quantity,
+    })),
+  );
 
-    await sheet.addRow(rowData);
-    return;
+  if (+shipping) {
+    console.log('add shipping', shipping);
+    rows.push({ ...rowData, product: '✉︎ shipping ✉︎', total: shipping });
   }
 
-  const rows: SheetRow[] = lineItems.map(({ quantity, title: product }) => ({
-    ...rowData,
-    product,
-    quantity,
-  }));
+  if (+donation) {
+    console.log('add donation', donation);
+    rows.push({ ...rowData, product: '♥️ donation ♥️', total: donation });
+  }
 
-  console.log(`logging ${rows.length} products`);
+  console.log(`logging ${rows.length} rows`);
 
   sheet.addRows(rows);
 };
