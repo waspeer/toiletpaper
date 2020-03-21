@@ -6,7 +6,7 @@ import * as yup from 'yup';
 import { pick, sentenceCase } from '#root/lib/helpers';
 
 import { Cart as CartObject } from '#root/lib/cart/types';
-import { handlePayment } from '#root/lib/stripe';
+import { handlePayment, checkPaymentStatus } from '#root/lib/stripe';
 import { CheckoutOrder } from '#root/lib/stripe/types';
 
 interface FormData {
@@ -41,7 +41,13 @@ type Events =
   | { type: 'UPDATE_PAYMENT_METHOD'; isValid?: boolean; method?: Context['paymentMethod'] }
   | { type: 'VALIDATION_ERROR'; errors: Context['formErrors'] }
   | { type: 'REVALIDATE'; errors: Context['formErrors'] }
-  | { type: 'VALID' };
+  | { type: 'VALID' }
+  | {
+      type: 'CHECK_PAYMENT_STATUS';
+      clientSecret: string;
+      products: CartObject['products'];
+      paymentId: string;
+    };
 
 const formSchema = yup.object().shape({
   name: yup.string().required(),
@@ -65,31 +71,6 @@ const getFormErrors = <T extends Record<string, any>>(fields: T): Map<keyof T, s
   }
 };
 
-const authenticateOrder = async ({
-  billingDetails,
-  donation,
-  paymentMethod,
-  products,
-  stripeElement,
-}: Pick<Context, 'billingDetails' | 'donation' | 'paymentMethod'> &
-  Pick<CartObject, 'products'> & {
-    stripeElement: StripeCardElement | StripeIdealBankElement;
-  }) => {
-  const order: CheckoutOrder = { billingDetails, donation, products };
-
-  const result = await handlePayment({
-    element: stripeElement,
-    order,
-    paymentMethod,
-  });
-
-  if (!result) throw Error('unexpected payment method');
-
-  if (result.success) return Promise.resolve();
-
-  return Promise.reject(result.error);
-};
-
 const getCheckoutMachine = ({ cart }: { cart: CartObject }) => {
   const initialContext: Context = {
     ...pick(cart, ['billingDetails', 'donation', 'shippingCosts']),
@@ -108,6 +89,15 @@ const getCheckoutMachine = ({ cart }: { cart: CartObject }) => {
       context: initialContext,
       states: {
         idle: {
+          initial: 'initial',
+          states: {
+            initial: {
+              on: {
+                CHECK_PAYMENT_STATUS: { target: '#checkingStatus' },
+              },
+            },
+            error: {},
+          },
           entry: assign({
             formErrors: ({ billingDetails }) => getFormErrors(billingDetails),
           }),
@@ -152,28 +142,21 @@ const getCheckoutMachine = ({ cart }: { cart: CartObject }) => {
               { target: 'idle.error' },
             ],
           },
-          initial: 'initial',
-          states: {
-            initial: {},
-            error: {},
-          },
         },
         authenticating: {
           invoke: {
-            id: 'authenticateOrder',
-            src: ({ billingDetails, donation, paymentMethod }, event) => {
-              if (event.type === 'SUBMIT') {
-                const { products, stripeElement } = event;
-                return authenticateOrder({
-                  billingDetails,
-                  donation,
-                  paymentMethod,
-                  products,
-                  stripeElement,
-                });
-              }
-              return Promise.reject();
+            src: 'authenticateOrder',
+            onDone: 'success',
+            onError: {
+              target: 'idle.error',
+              actions: assign({ authenticationError: (_, { data }) => data.message || data || '' }),
             },
+          },
+        },
+        checkingStatus: {
+          id: 'checkingStatus',
+          invoke: {
+            src: 'checkPaymentStatus',
             onDone: 'success',
             onError: {
               target: 'idle.error',
@@ -183,6 +166,7 @@ const getCheckoutMachine = ({ cart }: { cart: CartObject }) => {
         },
         success: {
           type: 'final',
+          entry: 'emptyStoredCart',
         },
       },
     },
@@ -190,6 +174,34 @@ const getCheckoutMachine = ({ cart }: { cart: CartObject }) => {
       guards: {
         isFormValid: ({ donation, formErrors, hasProducts, paymentMethodValid }) =>
           !formErrors.size && paymentMethodValid && (!!donation || hasProducts),
+      },
+      services: {
+        authenticateOrder: async (
+          { billingDetails, donation, paymentMethod },
+          { products, stripeElement },
+        ) => {
+          const order: CheckoutOrder = { billingDetails, donation, products };
+
+          const result = await handlePayment({
+            element: stripeElement,
+            order,
+            paymentMethod,
+          });
+
+          if (result.success) return Promise.resolve();
+          return Promise.reject(result.error);
+        },
+        checkPaymentStatus: async (
+          { billingDetails, donation },
+          { clientSecret, products, paymentId },
+        ) => {
+          const order: CheckoutOrder = { billingDetails, donation, products };
+
+          const result = await checkPaymentStatus({ clientSecret, order, paymentId });
+
+          if (result.success) return Promise.resolve();
+          return Promise.reject(result.error);
+        },
       },
     },
   );

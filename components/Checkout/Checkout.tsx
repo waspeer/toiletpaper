@@ -2,6 +2,7 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import { useElements, CardElement, IdealBankElement } from '@stripe/react-stripe-js';
 import { useMachine } from '@xstate/react';
+import { useRouter } from 'next/router';
 import React, { useCallback } from 'react';
 
 import Alert from '#root/components/Alert';
@@ -25,12 +26,14 @@ interface Props {
 }
 
 const DEFAULT_CURRENCY = 'EUR';
-const DISCOUNT = (process.env.DISCOUNT && +process.env.DISCOUNT) || 0.81;
 
 const Checkout = ({ lineItems }: Props) => {
   const stripeElements = useElements();
 
-  const { setBillingDetails, setDonation, ...cart } = useCart();
+  const { emptyCart, setBillingDetails, setDonation, ...cart } = useCart();
+
+  const { payment_intent_client_secret: clientSecret, payment_intent: paymentId } = useRouter()
+    .query as any;
 
   const updateStoredBillingDetails = useCallback(
     (_, { name, value }) => setBillingDetails(name, value),
@@ -43,7 +46,7 @@ const Checkout = ({ lineItems }: Props) => {
 
   const [current, send] = useMachine(getCheckoutMachine({ cart }), {
     devTools: process.env.NODE_ENV === 'development',
-    actions: { updateStoredBillingDetails, updateStoredDonation },
+    actions: { updateStoredBillingDetails, updateStoredDonation, emptyStoredCart: emptyCart },
   });
 
   const {
@@ -63,7 +66,7 @@ const Checkout = ({ lineItems }: Props) => {
 
   const formErrors = current.matches('idle.error') ? formErrorMap : new Map();
 
-  const productTotal = lineItems.reduce((acc, { total }) => acc + total, 0) * DISCOUNT;
+  const productTotal = lineItems.reduce((acc, { total }) => acc + total, 0);
 
   const formIsValid = !formErrors.size && paymentMethodValid && (donation || productTotal);
 
@@ -100,7 +103,16 @@ const Checkout = ({ lineItems }: Props) => {
     [cart.products, formIsValid, paymentMethod, send, stripeElements],
   );
 
-  if (!stripeElements) return <Loading />;
+  if (current.matches('idle.initial') && paymentId && clientSecret) {
+    send({ type: 'CHECK_PAYMENT_STATUS', clientSecret, paymentId, products: cart.products });
+  }
+
+  if (
+    !stripeElements ||
+    (paymentId && clientSecret && current.matches('idle.initial')) ||
+    current.matches('checkingStatus')
+  )
+    return <Loading />;
 
   if (current.matches('success'))
     return (
@@ -117,19 +129,14 @@ const Checkout = ({ lineItems }: Props) => {
         items={lineItems}
         split
         renderItem={({
-          donation: lineItemDonation,
-          variant: {
-            id,
-            image,
-            price: { amount: variantPrice },
-            selectedOptions,
-          },
+          variant: { id, image, selectedOptions },
           title,
+          total,
           quantity,
         }: LineItemObject) => (
           <LineItem
             currencyCode={currencyCode}
-            priceAmount={lineItemDonation + +variantPrice * DISCOUNT}
+            priceAmount={total}
             id={id}
             image={image}
             key={id}
