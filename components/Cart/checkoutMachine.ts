@@ -1,6 +1,7 @@
 import { Machine } from 'xstate';
 
 import { Image, ProductVariant, ProductOption } from '#root/lib/shopify/types';
+import { SHIPPING_COSTS } from '#root/lib/constants';
 
 type LineItem = ProductVariant & {
   product: {
@@ -41,7 +42,7 @@ const initialContext: Checkout = {
   },
   donation: 0,
   products: [],
-  shipping: Number(process.env.SHIPPING_COSTS) || 10,
+  shipping: SHIPPING_COSTS,
   total: 0,
 };
 

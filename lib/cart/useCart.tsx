@@ -2,9 +2,10 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { createContext, useContext } from 'react';
 
+import { SHIPPING_COSTS } from '#root/lib/constants';
 import useLocalStorage from '#root/lib/hooks/useLocalStorage';
 
-import { EMPTY_CART, LOCAL_STORAGE_KEY, SHIPPING_COSTS } from './constants';
+import { EMPTY_CART, LOCAL_STORAGE_KEY } from './constants';
 import { Cart, CartContext as CartContextObject } from './types';
 
 const CartContext = createContext(EMPTY_CART as CartContextObject);

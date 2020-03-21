@@ -12,6 +12,7 @@ import {
 import axios from 'axios';
 
 import { mapCartProductsToLineItems } from '#root/lib/cart';
+import { SHIPPING_COSTS, DEFAULT_CURRENCY } from '#root/lib/constants';
 import { ok, fail } from '#root/lib/result';
 import { ErrorObject, FailedResult, Result } from '#root/lib/result/types';
 import { getCollection } from '#root/lib/shopify';
@@ -27,8 +28,6 @@ import {
 } from './types';
 
 const API_ENDPOINT = '/api/pay';
-const DEFAULT_CURRENCY = process.env.DEFAULT_CURRENCY || 'EUR';
-const SHIPPING_COSTS = process.env.SHIPPING_COSTS ? +process.env.SHIPPING_COSTS : 10;
 
 export const stripePromise = loadStripe(process.env.STRIPE_PUBLIC_KEY || '', {
   apiVersion: '2020-03-02',

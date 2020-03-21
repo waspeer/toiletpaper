@@ -1,7 +1,7 @@
+import { DISCOUNT } from '#root/lib/constants';
 import { NormalizedShopifyData } from '#root/lib/shopify/types';
-import { Cart, LineItem } from './types';
 
-const DISCOUNT = (process.env.DISCOUNT && +process.env.DISCOUNT) || 0.81;
+import { Cart, LineItem } from './types';
 
 export const mapCartProductsToLineItems = (
   collection: NormalizedShopifyData,

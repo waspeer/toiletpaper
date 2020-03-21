@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import getSymbolFromCurrency from 'currency-symbol-map';
 import React, { memo } from 'react';
 
+import { DISCOUNT } from '#root/lib/constants';
 import InputNumber from '#root/components/InputNumber';
 import { Paragraph } from '#root/components/Typography';
 import { colors } from '#root/style';
@@ -61,21 +62,10 @@ export const OldPrice = styled.div`
   }
 `;
 
-const DISCOUNT = (process.env.DISCOUNT && +process.env.DISCOUNT) || 0.81;
-
 const PWYWInput = ({ currencyCode, price, onChange, value }: Props) => {
   const currencySymbol = getSymbolFromCurrency(currencyCode);
 
   const minPrice = price * DISCOUNT;
-
-  // const formatter = (value: string | number) => {
-  //   const [, beforeComma, afterComma] = (String(value).match(/^(\d+)\.(.*)/) as [
-  //     void,
-  //     string,
-  //     string,
-  //   ]) || [null, value, '0'];
-  //   return `${beforeComma}.${afterComma.substr(0, 2).padEnd(2, '0')}`;
-  // };
 
   const formatPriceAmount = new Intl.NumberFormat('nl-Nl', {
     style: 'currency',

@@ -5,6 +5,7 @@ import Button from '#root/components/Button';
 import Party from '#root/components/Party';
 import { Title, Paragraph } from '#root/components/Typography';
 import { useCart } from '#root/lib/cart';
+import { DISCOUNT } from '#root/lib/constants';
 import useNotifications from '#root/lib/hooks/useNotifications';
 import { client as shopifyClient } from '#root/lib/shopify';
 import { Product as ShopifyProduct, ProductVariant } from '#root/lib/shopify/types';
@@ -21,8 +22,6 @@ interface Props {
   title: ShopifyProduct['title'];
   variants: ShopifyProduct['variants'];
 }
-
-const DISCOUNT = (process.env.DISCOUNT && +process.env.DISCOUNT) || 0.81;
 
 const getInitialOptionState = (options: ShopifyProduct['options']) =>
   options.reduce((acc, { name, values }) => {
