@@ -30,16 +30,20 @@ const DISCOUNT = (process.env.DISCOUNT && +process.env.DISCOUNT) || 0.81;
 const Checkout = ({ lineItems }: Props) => {
   const stripeElements = useElements();
 
-  const { setBillingDetails, ...cart } = useCart();
+  const { setBillingDetails, setDonation, ...cart } = useCart();
 
   const updateStoredBillingDetails = useCallback(
     (_, { name, value }) => setBillingDetails(name, value),
     [setBillingDetails],
   );
 
+  const updateStoredDonation = useCallback((_, { donation }) => setDonation(donation), [
+    setDonation,
+  ]);
+
   const [current, send] = useMachine(getCheckoutMachine({ cart }), {
     devTools: process.env.NODE_ENV === 'development',
-    actions: { updateStoredBillingDetails },
+    actions: { updateStoredBillingDetails, updateStoredDonation },
   });
 
   const {

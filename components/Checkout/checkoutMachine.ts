@@ -83,20 +83,6 @@ const authenticateOrder = async ({
     paymentMethod,
   });
 
-  // let result: Result<any, ErrorTypes> | undefined;
-
-  // if (paymentMethod === 'card')
-  //   result = await stripeHandler.handleCardPayment({
-  //     card: stripeElement as StripeCardElement,
-  //     order,
-  //   });
-
-  // if (paymentMethod === 'ideal')
-  //   result = await stripeHandler.handleIDealPayment({
-  //     idealBank: stripeElement as StripeIdealBankElement,
-  //     order,
-  //   });
-
   if (!result) throw Error('unexpected payment method');
 
   if (result.success) return Promise.resolve();
@@ -142,7 +128,7 @@ const getCheckoutMachine = ({ cart }: { cart: CartObject }) => {
             },
             UPDATE_DONATION: {
               target: '',
-              actions: assign({ donation: (_, e) => +e.donation }),
+              actions: [assign({ donation: (_, e) => +e.donation }), 'updateStoredDonation'],
             },
             UPDATE_PAYMENT_METHOD: {
               target: '',
