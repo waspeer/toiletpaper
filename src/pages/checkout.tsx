@@ -1,6 +1,7 @@
 import { GetStaticProps } from 'next';
 import React from 'react';
 
+import PageHead from '#root/components/PageHead';
 import { useCart, mapCartProductsToLineItems } from '#root/lib/cart';
 import { getCollection } from '#root/lib/shopify';
 import { NormalizedShopifyData } from '#root/lib/shopify/types';
@@ -15,7 +16,12 @@ export const getStaticProps: GetStaticProps = async () => {
 const CheckoutPage = (shopifyData: NormalizedShopifyData) => {
   const { products } = useCart();
   const lineItems = mapCartProductsToLineItems(shopifyData, products);
-  return <Checkout lineItems={lineItems} />;
+  return (
+    <>
+      <PageHead title="Checkout" />
+      <Checkout lineItems={lineItems} />
+    </>
+  );
 };
 
 export default CheckoutPage;

@@ -1,6 +1,7 @@
 import { GetStaticProps } from 'next';
 import React from 'react';
 
+import PageHead from '#root/components/PageHead';
 import Productlist from '#root/sections/Productlist';
 import { getCollection } from '#root/lib/shopify';
 import { Product as ShopifyProduct } from '#root/lib/shopify/types';
@@ -16,7 +17,12 @@ interface Props {
 }
 
 const Products = ({ products }: Props) => {
-  return <Productlist products={products} />;
+  return (
+    <>
+      <PageHead title="Products" />
+      <Productlist products={products} />
+    </>
+  );
 };
 
 export default Products;

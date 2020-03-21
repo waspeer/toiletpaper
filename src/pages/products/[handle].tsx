@@ -1,6 +1,7 @@
 import { GetStaticPaths, GetStaticProps } from 'next';
 import React from 'react';
 
+import PageHead from '#root/components/PageHead';
 import Product from '#root/sections/ProductForm';
 import { getCollection, client as shopifyClient, normalizeShopifyProduct } from '#root/lib/shopify';
 import { Product as ShopifyProduct } from '#root/lib/shopify/types';
@@ -24,14 +25,17 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 const ProductPage = ({ id, description, images, options, title, variants }: ShopifyProduct) => {
   const image = images[0];
   return (
-    <Product
-      description={description}
-      image={image}
-      title={title}
-      options={options}
-      productId={id}
-      variants={variants}
-    />
+    <>
+      <PageHead title={title} />
+      <Product
+        description={description}
+        image={image}
+        title={title}
+        options={options}
+        productId={id}
+        variants={variants}
+      />
+    </>
   );
 };
 
