@@ -26,7 +26,7 @@ const ProductPage = ({ id, description, images, options, title, variants }: Shop
   const image = images[0];
   return (
     <>
-      <PageHead title={title} />
+      <PageHead description={description.replace(/<[^>]*>?/gm, '')} title={title} />
       <Product
         description={description}
         image={image}
