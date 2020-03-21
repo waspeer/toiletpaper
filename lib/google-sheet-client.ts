@@ -30,15 +30,18 @@ const getSheet = async () => {
   }
 
   const doc = new GoogleSpreadsheet(process.env.GOOGLE_SHEET_ID);
-
   await doc.useServiceAccountAuth(credentials);
-
   await doc.loadInfo();
-
   return doc.sheetsByIndex[0] as GoogleSpreadsheetWorksheet;
 };
 
 const sheetPromise = getSheet();
+
+export const orderAlreadyLogged = async (paymentId: string) => {
+  const sheet = await sheetPromise;
+  const rows = await sheet.getRows<SheetRow>();
+  return rows.some((row) => row.paymentId === paymentId);
+};
 
 export const addOrder = async ({
   billingDetails,
@@ -49,9 +52,16 @@ export const addOrder = async ({
   shippingCosts: shipping,
   status,
 }: ReceivedOrderPayload) => {
-  console.log('Called...');
+  console.log('logger called');
 
   const sheet = await sheetPromise;
+
+  if (await orderAlreadyLogged(paymentId)) {
+    console.log('order already logged', paymentId);
+
+    return;
+  }
+
   const { address, city, country, email, name, postalCode } = billingDetails;
   const date = dayjs().format('DD-MM-YYYY HH:mm:ss');
   const rowData: SheetRow = {
@@ -70,27 +80,28 @@ export const addOrder = async ({
     status,
   };
 
-  console.log('lineItems', lineItems);
-  console.log('donation', donation);
-
   if (!lineItems.length && donation) {
+    console.log('no products, just donation', donation);
+
     await sheet.addRow(rowData);
     return;
   }
 
-  const rows: SheetRow[] = lineItems.map(({ quantity, title: productTitle, variant }) => {
-    const { title: variantTitle } = variant;
-    const product = `${productTitle} ${variantTitle}`;
-    return { ...rowData, product, quantity };
-  });
+  const rows: SheetRow[] = lineItems.map(({ quantity, title: product }) => ({
+    ...rowData,
+    product,
+    quantity,
+  }));
+
+  console.log(`logging ${rows.length} products`);
 
   sheet.addRows(rows);
 };
 
 export const subscribe = (events: Events) => {
-  events.ReceivedOrder.attach((order) => {
-    console.log('Registered...');
+  console.log('logger registered');
 
+  events.ReceivedOrder.attach((order) => {
     addOrder(order);
   });
 };
