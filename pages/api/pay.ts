@@ -10,8 +10,7 @@ import { AmountTooSmall, UnexpectedError, ErrorTypes } from '#root/lib/stripe/er
 import { makeOrderObject, mapErrorToResult } from '#root/lib/stripe';
 import { getCollection } from '#root/lib/shopify';
 
-const RETURN_URL = `${process.env.DOMAIN || 'http://localhost:3000'}/checkout/complete`;
-const STRIPE = new Stripe(process.env.STRIPE_SECRET || '', { apiVersion: '2020-03-02' });
+const stripe = new Stripe(process.env.STRIPE_SECRET || '', { apiVersion: '2020-03-02' });
 
 type Response = Result<SuccesResponsePayload, UnexpectedErrorType | ErrorTypes>;
 
@@ -29,10 +28,11 @@ export default async function Pay(req: NextApiRequest, res: NextApiResponse<Resp
 
       if (amount < 1) return res.status(400).json(fail(AmountTooSmall()));
 
-      intent = await STRIPE.paymentIntents.create({
+      intent = await stripe.paymentIntents.create({
         amount,
         currency: order.currencyCode,
         description: 'Operation Toiletpaper by Klangstof ♥️',
+        metadata: makeMetaData(order),
         payment_method_types: ['card', 'ideal'],
       });
     }
@@ -40,7 +40,7 @@ export default async function Pay(req: NextApiRequest, res: NextApiResponse<Resp
     if (body.type === 'CONFIRM_PAYMENT') {
       const { paymentIntentId } = body.payload;
       order = body.payload.order;
-      intent = await STRIPE.paymentIntents.confirm(paymentIntentId);
+      intent = await stripe.paymentIntents.confirm(paymentIntentId);
     }
 
     if (!(intent && order))
@@ -57,8 +57,21 @@ export default async function Pay(req: NextApiRequest, res: NextApiResponse<Resp
   }
 }
 
-const calculateOrderTotal = ({ donation, lineItems, shippingCosts }: ServerOrder) => {
+function calculateOrderTotal({ donation, lineItems, shippingCosts }: ServerOrder) {
   const safeDonation = donation > 0 ? +donation : 0;
   const productTotal = lineItems.reduce((acc, { total }) => acc + total, 0);
   return Math.floor((safeDonation + productTotal + shippingCosts) * 100);
-};
+}
+
+function makeMetaData({ donation, lineItems }: ServerOrder): Record<string, string> {
+  const parsedLineItems = lineItems.map(({ title, total, quantity }) => ({
+    title,
+    total,
+    quantity,
+  }));
+
+  return {
+    donation: String(donation),
+    order: JSON.stringify(parsedLineItems, null, 2),
+  };
+}
