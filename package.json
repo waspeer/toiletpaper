@@ -34,7 +34,6 @@
     "react-animated-text": "^0.1.4",
     "react-country-region-selector": "^1.4.7",
     "react-dom": "16.13.0",
-    "react-hook-form": "^5.1.1",
     "shopify-buy": "^2.9.1",
     "smoothscroll-polyfill": "^0.4.4",
     "stripe": "^8.32.0",
