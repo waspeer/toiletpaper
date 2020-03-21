@@ -1,6 +1,6 @@
 /* eslint-disable react/no-this-in-sfc */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import React, { createContext, useContext } from 'react';
+import React, { useCallback, createContext, useContext } from 'react';
 
 import { SHIPPING_COSTS } from '#root/lib/constants';
 import useLocalStorage from '#root/lib/hooks/useLocalStorage';
@@ -16,47 +16,55 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
   const context: CartContextObject = {
     ...cart,
 
-    addItemToCart({ variantId, donation, quantity }) {
-      setCart((previousCart) => {
-        const products = new Map(previousCart.products);
-        const previousQuantity = products.get(variantId)?.quantity || 0;
-        products.set(variantId, {
-          quantity: previousQuantity + quantity,
-          donation: Math.floor(donation * 100) / 100,
+    addItemToCart: useCallback(
+      ({ variantId, donation, quantity }) => {
+        setCart((previousCart) => {
+          const products = new Map(previousCart.products);
+          const previousQuantity = products.get(variantId)?.quantity || 0;
+          products.set(variantId, {
+            quantity: previousQuantity + quantity,
+            donation: Math.floor(donation * 100) / 100,
+          });
+          return { ...previousCart, products: Array.from(products), donation: 0 };
         });
-        return { ...previousCart, products: Array.from(products), donation: 0 };
-      });
-    },
+      },
+      [setCart],
+    ),
 
     emptyCart() {
       setCart(({ billingDetails }) => ({ ...EMPTY_CART, billingDetails }));
     },
 
-    removeItemFromCart(variantId) {
-      setCart(({ products, ...rest }) => ({
-        ...rest,
-        products: products.filter(([id]) => id !== variantId),
-      }));
-    },
+    removeItemFromCart: useCallback(
+      (variantId) => {
+        setCart(({ products, ...rest }) => ({
+          ...rest,
+          products: products.filter(([id]) => id !== variantId),
+        }));
+      },
+      [setCart],
+    ),
 
-    setBillingDetails(name: string, value: string) {
-      setCart(({ billingDetails, ...previousCart }) => ({
-        ...previousCart,
-        billingDetails: { ...billingDetails, [name]: value },
-      }));
-    },
+    setBillingDetails: useCallback(
+      (name: string, value: string) => {
+        setCart(({ billingDetails, ...previousCart }) => ({
+          ...previousCart,
+          billingDetails: { ...billingDetails, [name]: value },
+        }));
+      },
+      [setCart],
+    ),
 
-    setDonation(donation) {
-      setCart((previousCart) => ({ ...previousCart, donation }));
-    },
+    setDonation: useCallback(
+      (donation) => {
+        setCart((previousCart) => ({ ...previousCart, donation }));
+      },
+      [setCart],
+    ),
 
-    get shippingCosts() {
-      return Object.keys(cart.products).length === 0 ? 0 : SHIPPING_COSTS;
-    },
+    shippingCosts: Object.keys(cart.products).length === 0 ? 0 : SHIPPING_COSTS,
 
-    get cartSize() {
-      return cart.products.reduce((acc, [, { quantity }]) => acc + quantity, 0);
-    },
+    cartSize: cart.products.reduce((acc, [, { quantity }]) => acc + quantity, 0),
   };
 
   return <CartContext.Provider value={context}>{children}</CartContext.Provider>;

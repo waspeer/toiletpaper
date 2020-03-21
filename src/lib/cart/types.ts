@@ -39,6 +39,7 @@ export interface SetBillingDetailsFunction {
 
 export type CartContext = Cart & {
   addItemToCart: AddItemFunction;
+  cartSize: number;
   emptyCart: () => void;
   removeItemFromCart: RemoveItemFunction;
   setDonation: SetDonationFunction;
