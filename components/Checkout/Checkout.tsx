@@ -7,9 +7,9 @@ import React, { useCallback } from 'react';
 
 import Alert from '#root/components/Alert';
 import { useCart } from '#root/lib/cart';
+import { LineItem as LineItemObject } from '#root/lib/cart/types';
 import Loading from '#root/components/Loading';
 import Thanks from '#root/components/Thanks';
-import { LineItem as LineItemObject } from '#root/lib/shopify/types';
 import List from '#root/components/List';
 
 import { Form, Title, Wrapper } from './_styles';

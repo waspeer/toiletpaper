@@ -6,7 +6,7 @@ import Party from '#root/components/Party';
 import { Title, Paragraph } from '#root/components/Typography';
 import { useCart } from '#root/lib/cart';
 import useNotifications from '#root/lib/hooks/useNotifications';
-import { shopifyClient } from '#root/lib/shopify';
+import { client as shopifyClient } from '#root/lib/shopify';
 import { Product as ShopifyProduct, ProductVariant } from '#root/lib/shopify/types';
 
 import { ColLeft, ColRight, Wrapper, Info, Form } from './_style';

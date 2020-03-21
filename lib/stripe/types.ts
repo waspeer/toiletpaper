@@ -1,9 +1,8 @@
 import { PaymentIntent } from '@stripe/stripe-js';
 
-import { Cart as CartObject } from '#root/lib/cart/types';
+import { Cart as CartObject, LineItem } from '#root/lib/cart/types';
 import { SuccessResult, FailedResult, UnexpectedErrorType } from '#root/lib/result/types';
 import { ServerRequestObject } from '#root/lib/server/types';
-import { LineItem } from '#root/lib/shopify/types';
 
 // ORDER
 

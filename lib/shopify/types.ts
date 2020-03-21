@@ -56,11 +56,3 @@ export interface NormalizedShopifyData {
   products: NormalizedObject<Omit<Product, 'variants'> & { variants: string[] }>;
   variants: NormalizedObject<ProductVariant>;
 }
-
-export interface LineItem {
-  donation: number;
-  quantity: number;
-  title: string;
-  total: number;
-  variant: ProductVariant;
-}

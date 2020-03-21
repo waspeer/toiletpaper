@@ -1,8 +1,8 @@
 import { GetStaticProps } from 'next';
 import React from 'react';
 
-import { useCart } from '#root/lib/cart';
-import { getCollection, mapCartProductsToLineItems } from '#root/lib/shopify';
+import { useCart, mapCartProductsToLineItems } from '#root/lib/cart';
+import { getCollection } from '#root/lib/shopify';
 import { NormalizedShopifyData } from '#root/lib/shopify/types';
 import Checkout from '#root/components/Checkout';
 

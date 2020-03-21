@@ -1,3 +1,5 @@
+import { ProductVariant } from '#root/lib/shopify/types';
+
 export interface BillingDetails {
   address: string;
   city: string;
@@ -42,3 +44,12 @@ export type CartContext = Cart & {
   setDonation: SetDonationFunction;
   setBillingDetails: SetBillingDetailsFunction;
 };
+
+export interface LineItem {
+  donation: number;
+  discountPrice: number;
+  quantity: number;
+  title: string;
+  total: number;
+  variant: ProductVariant;
+}
