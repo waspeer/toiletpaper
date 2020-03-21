@@ -1,2 +1,2 @@
 next.config.js
-next-env.d.ts
+*.d.ts
