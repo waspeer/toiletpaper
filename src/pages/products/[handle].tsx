@@ -21,7 +21,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   return { props: normalizeShopifyProduct(product) };
 };
 
-const ProductPage = ({ description, images, options, title, variants }: ShopifyProduct) => {
+const ProductPage = ({ id, description, images, options, title, variants }: ShopifyProduct) => {
   const image = images[0];
   return (
     <Product
@@ -29,6 +29,7 @@ const ProductPage = ({ description, images, options, title, variants }: ShopifyP
       image={image}
       title={title}
       options={options}
+      productId={id}
       variants={variants}
     />
   );
