@@ -1,1 +1,1 @@
-export { default } from './stripe';
+export * from './stripe';

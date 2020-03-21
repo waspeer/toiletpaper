@@ -1,13 +1,12 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable react/jsx-props-no-spreading */
-import { useElements, useStripe, CardElement, IdealBankElement } from '@stripe/react-stripe-js';
+import { useElements, CardElement, IdealBankElement } from '@stripe/react-stripe-js';
 import { useMachine } from '@xstate/react';
 import React, { useCallback } from 'react';
 
 import Alert from '#root/components/Alert';
 import { useCart } from '#root/lib/cart';
 import Loading from '#root/components/Loading';
-import StripeHandler from '#root/lib/stripe';
 import Thanks from '#root/components/Thanks';
 import { LineItem as LineItemObject } from '#root/lib/shopify/types';
 import List from '#root/components/List';
@@ -30,8 +29,6 @@ const DISCOUNT = (process.env.DISCOUNT && +process.env.DISCOUNT) || 0.81;
 
 const Checkout = ({ lineItems }: Props) => {
   const stripeElements = useElements();
-
-  const stripe = useStripe();
 
   const { setBillingDetails, ...cart } = useCart();
 
@@ -62,7 +59,7 @@ const Checkout = ({ lineItems }: Props) => {
 
   const formErrors = current.matches('idle.error') ? formErrorMap : new Map();
 
-  const productTotal = lineItems.reduce((acc, { variant }) => acc + +variant.price.amount, 0);
+  const productTotal = lineItems.reduce((acc, { total }) => acc + total, 0) * DISCOUNT;
 
   const formIsValid = !formErrors.size && paymentMethodValid && (donation || productTotal);
 
@@ -87,21 +84,19 @@ const Checkout = ({ lineItems }: Props) => {
     (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
 
-      if (!(formIsValid && stripe && stripeElements)) return;
-
-      const stripeHandler = new StripeHandler(stripe);
+      if (!(formIsValid && stripeElements)) return;
 
       const stripeElement =
         paymentMethod === 'card'
           ? stripeElements.getElement(CardElement)!
           : stripeElements.getElement(IdealBankElement)!;
 
-      send({ type: 'SUBMIT', products: cart.products, stripeElement, stripeHandler });
+      send({ type: 'SUBMIT', products: cart.products, stripeElement });
     },
-    [cart.products, formIsValid, paymentMethod, send, stripe, stripeElements],
+    [cart.products, formIsValid, paymentMethod, send, stripeElements],
   );
 
-  if (!(stripe && stripeElements)) return <Loading />;
+  if (!stripeElements) return <Loading />;
 
   if (current.matches('success'))
     return (

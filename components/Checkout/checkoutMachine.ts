@@ -6,10 +6,8 @@ import * as yup from 'yup';
 import { pick, sentenceCase } from '#root/lib/helpers';
 
 import { Cart as CartObject } from '#root/lib/cart/types';
-import StripeHandler from '#root/lib/stripe';
+import { handlePayment } from '#root/lib/stripe';
 import { CheckoutOrder } from '#root/lib/stripe/types';
-import { ErrorTypes } from '#root/lib/stripe/errors';
-import { Result } from '#root/lib/result/types';
 
 interface FormData {
   address: string;
@@ -36,7 +34,6 @@ type Events =
       type: 'SUBMIT';
       products: CartObject['products'];
       stripeElement: StripeCardElement | StripeIdealBankElement;
-      stripeHandler: StripeHandler;
     }
   | { type: 'SUCCESS' }
   | { type: 'UPDATE_BILLING_DETAILS'; name: string; value: string }
@@ -73,28 +70,32 @@ const authenticateOrder = async ({
   donation,
   paymentMethod,
   products,
-  stripeHandler,
   stripeElement,
 }: Pick<Context, 'billingDetails' | 'donation' | 'paymentMethod'> &
   Pick<CartObject, 'products'> & {
-    stripeHandler: StripeHandler;
     stripeElement: StripeCardElement | StripeIdealBankElement;
   }) => {
   const order: CheckoutOrder = { billingDetails, donation, products };
 
-  let result: Result<any, ErrorTypes> | undefined;
+  const result = await handlePayment({
+    element: stripeElement,
+    order,
+    paymentMethod,
+  });
 
-  if (paymentMethod === 'card')
-    result = await stripeHandler.handleCardPayment({
-      card: stripeElement as StripeCardElement,
-      order,
-    });
+  // let result: Result<any, ErrorTypes> | undefined;
 
-  if (paymentMethod === 'ideal')
-    result = await stripeHandler.handleIDealPayment({
-      idealBank: stripeElement as StripeIdealBankElement,
-      order,
-    });
+  // if (paymentMethod === 'card')
+  //   result = await stripeHandler.handleCardPayment({
+  //     card: stripeElement as StripeCardElement,
+  //     order,
+  //   });
+
+  // if (paymentMethod === 'ideal')
+  //   result = await stripeHandler.handleIDealPayment({
+  //     idealBank: stripeElement as StripeIdealBankElement,
+  //     order,
+  //   });
 
   if (!result) throw Error('unexpected payment method');
 
@@ -176,14 +177,13 @@ const getCheckoutMachine = ({ cart }: { cart: CartObject }) => {
             id: 'authenticateOrder',
             src: ({ billingDetails, donation, paymentMethod }, event) => {
               if (event.type === 'SUBMIT') {
-                const { products, stripeElement, stripeHandler } = event;
+                const { products, stripeElement } = event;
                 return authenticateOrder({
                   billingDetails,
                   donation,
                   paymentMethod,
                   products,
                   stripeElement,
-                  stripeHandler,
                 });
               }
               return Promise.reject();

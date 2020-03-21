@@ -22,13 +22,7 @@ export type ServerOrder = Omit<CheckoutOrder, 'products'> & {
 
 // SERVER REQUESTS
 
-export type RequestPaymentRequest = ServerRequestObject<
-  'REQUEST_PAYMENT',
-  {
-    paymentMethodId: string;
-    order: CheckoutOrder;
-  }
->;
+export type CreateIntentRequest = ServerRequestObject<'CREATE_INTENT', CheckoutOrder>;
 
 export type ConfirmPaymentRequest = ServerRequestObject<
   'CONFIRM_PAYMENT',
@@ -38,7 +32,7 @@ export type ConfirmPaymentRequest = ServerRequestObject<
   }
 >;
 
-export type ServerRequest = RequestPaymentRequest | ConfirmPaymentRequest;
+export type ServerRequest = ConfirmPaymentRequest | CreateIntentRequest;
 
 // SERVER RESPONSES
 
