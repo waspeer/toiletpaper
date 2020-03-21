@@ -23,7 +23,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
           quantity: previousQuantity + quantity,
           donation: Math.floor(donation * 100) / 100,
         });
-        return { ...previousCart, products: Array.from(products) };
+        return { ...previousCart, products: Array.from(products), donation: 0 };
       });
     },
 
