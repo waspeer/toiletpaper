@@ -61,5 +61,6 @@ export interface LineItem {
   donation: number;
   quantity: number;
   title: string;
+  total: number;
   variant: ProductVariant;
 }

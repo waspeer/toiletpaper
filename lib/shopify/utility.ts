@@ -19,7 +19,15 @@ export const mapCartProductsToLineItems = (
     ([variantId, { quantity, donation }]): LineItem => {
       const variant = variants.byId[variantId];
       const { title } = products.byId[variant.productId];
-      return { donation, variant, quantity, title };
+      return {
+        donation,
+        variant,
+        quantity,
+        title,
+        get total() {
+          return +donation + +variant.price.amount * quantity;
+        },
+      };
     },
   );
 };
