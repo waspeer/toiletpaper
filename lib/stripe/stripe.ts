@@ -11,7 +11,6 @@ import {
 } from '@stripe/stripe-js';
 import axios from 'axios';
 
-import trigger from '#root/lib/ledger/trigger';
 import { ok, fail } from '#root/lib/result';
 import { ErrorObject, FailedResult, Result } from '#root/lib/result/types';
 import { mapCartProductsToLineItems, getCollection } from '#root/lib/shopify';
@@ -81,7 +80,7 @@ export async function handlePayment({
         billing_details: mapBillingDetails(order.billingDetails),
         ideal: element as StripeIdealBankElement,
       },
-      return_url: `${window.location.origin}/checkout/complete`,
+      return_url: `${window.location.origin}/checkout`,
     });
   }
 
@@ -121,8 +120,7 @@ export async function handlePaymentIntentStatus({
   const { status } = paymentIntent;
 
   if (status === 'succeeded' || status === 'processing') {
-    trigger({ type: 'RECEIVED_ORDER', payload: { ...order, status } });
-    return ok({ processing: false });
+    return ok({ processing: status === 'processing' });
   }
 
   if (status === 'requires_payment_method' || status === 'canceled') {
