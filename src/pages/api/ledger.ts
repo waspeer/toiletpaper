@@ -35,7 +35,10 @@ export default async function Ledger(req: NextApiRequest, res: NextApiResponse) 
   if (event.type === 'payment_intent.succeeded') {
     const paymentIntent = event.data.object as PaymentIntent;
 
+    console.log('Received succesful payment with id: %s', paymentIntent.id);
+
     if ((paymentIntent as any).metadata.toiletpaper === 'true') {
+      console.log('Payment intent was for operation toiletpaper');
       const metadata = parseMetadata(paymentIntent);
       trigger({ type: 'RECEIVED_ORDER', payload: metadata });
     }
