@@ -35,16 +35,13 @@ export default async function Ledger(req: NextApiRequest, res: NextApiResponse) 
   if (event.type === 'payment_intent.succeeded') {
     const paymentIntent = event.data.object as PaymentIntent;
 
-    console.log((paymentIntent as any).metadata);
-
     if ((paymentIntent as any).metadata.toiletpaper === 'true') {
       const metadata = parseMetadata(paymentIntent);
-      console.log('metadata', metadata);
       trigger({ type: 'RECEIVED_ORDER', payload: metadata });
     }
   }
 
-  return res.json({ received: true });
+  return res.status(200).json({ received: true });
 }
 
 function runMiddleware<I extends IncomingMessage, O extends OutgoingMessage>(
