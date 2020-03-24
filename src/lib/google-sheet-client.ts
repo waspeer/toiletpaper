@@ -29,11 +29,9 @@ export const getSheet = async () => {
     throw new Error('GOOGLE SHEET: Credentials should be set in environment variables.');
   }
 
-  console.log('Retrieving google sheet');
+  console.log('[google-sheet]: retreiving sheet... ');
 
   const doc = new GoogleSpreadsheet(process.env.GOOGLE_SHEET_ID);
-
-  console.log('Authenticating google sheet...');
 
   await doc.useServiceAccountAuth({
     client_email: process.env.GOOGLE_CLIENT_EMAIL,
@@ -42,10 +40,12 @@ export const getSheet = async () => {
       .replace(/\\u003d/g, '='),
   });
 
-  console.log('Google sheet authenticated');
-
   await doc.loadInfo();
-  return doc.sheetsByIndex[0] as GoogleSpreadsheetWorksheet;
+  const sheet = doc.sheetsByIndex[0] as GoogleSpreadsheetWorksheet;
+
+  console.log('[google-sheet]: google sheet successfully retreived');
+
+  return sheet;
 };
 
 export const addOrder = async ({
@@ -54,17 +54,15 @@ export const addOrder = async ({
   shipping,
   ...rowData
 }: ReceivedOrderPayload) => {
-  console.log('logger called for payment: %s', rowData.paymentId);
+  console.log('[google-sheet]: called for payment: %s', rowData.paymentId);
 
   const sheet = await getSheet();
 
   const savedRows = await sheet.getRows<SheetRow>();
   if (savedRows.some((row) => row.paymentId === rowData.paymentId)) {
-    console.log('order already logged: "%s"', rowData.paymentId);
+    console.log('[google-sheet]: order already logged: "%s"', rowData.paymentId);
     return;
   }
-
-  console.log('order has not yet been logged');
 
   const rows = [] as SheetRow[];
 
@@ -78,24 +76,24 @@ export const addOrder = async ({
   );
 
   if (+shipping) {
-    console.log('add shipping: € %d', shipping);
+    console.log('[google-sheet]: add shipping: € %d', shipping);
     rows.push({ ...rowData, product: '✉︎ shipping ✉︎', total: shipping });
   }
 
   if (+donation) {
-    console.log('add donation: € %d', donation);
+    console.log('[google-sheet]: add donation: € %d', donation);
     rows.push({ ...rowData, product: '♥️ donation ♥️', total: donation });
   }
 
-  console.log(`logging ${rows.length} rows...`);
+  console.log(`[google-sheet]: logging ${rows.length} rows...`);
+
   await sheet.addRows(rows);
-  console.log('logging successful');
+
+  console.log('[google-sheet]: logging successful');
 };
 
 export const subscribe = (events: Events) => {
-  console.log('Google sheet: subscribed...');
   events.ReceivedOrder.push(async (order) => {
-    console.log('Google sheet: new order received, logging...');
     return addOrder(order);
   });
 };

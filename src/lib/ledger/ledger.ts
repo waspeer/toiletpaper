@@ -17,6 +17,5 @@ export const trigger = async ({ type, payload }: TriggerRequest) => {
   if (type === 'RECEIVED_ORDER') {
     return Promise.all(events.ReceivedOrder.map((listener) => listener(payload)));
   }
-
   return Promise.resolve();
 };

@@ -28,21 +28,17 @@ export default async function Ledger(req: NextApiRequest, res: NextApiResponse) 
   try {
     event = stripe.webhooks.constructEvent(req.body, signature, STRIPE_WEBHOOK_SECRET);
   } catch (error) {
-    console.log('error at constructevent', error);
+    console.log('[ledger-endpoint]: error at constructevent', error);
     return res.status(400).send(`Webhook Error: ${error.message}`);
   }
 
   if (event.type === 'payment_intent.succeeded') {
     const paymentIntent = event.data.object as PaymentIntent;
 
-    console.log('Received succesful payment with id: %s', paymentIntent.id);
-
     if ((paymentIntent as any).metadata.toiletpaper === 'true') {
-      console.log('Payment intent was for operation toiletpaper');
+      console.log('[ledger-endpoint]: received succesful payment with id: %s', paymentIntent.id);
       const metadata = parseMetadata(paymentIntent);
-      await trigger({ type: 'RECEIVED_ORDER', payload: metadata })
-        .then(() => console.log('ja maar waaorm weet niemand'))
-        .catch((e) => console.log('nee', e));
+      await trigger({ type: 'RECEIVED_ORDER', payload: metadata });
     }
   }
 
