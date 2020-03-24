@@ -33,6 +33,8 @@ export const getSheet = async () => {
 
   const doc = new GoogleSpreadsheet(process.env.GOOGLE_SHEET_ID);
 
+  console.log('Authenticating google sheet...');
+
   await doc.useServiceAccountAuth({
     client_email: process.env.GOOGLE_CLIENT_EMAIL,
     private_key: (process.env.GOOGLE_PRIVATE_KEY || '')
@@ -92,7 +94,7 @@ export const addOrder = async ({
 
 export const subscribe = (events: Events) => {
   console.log('Google sheet: subscribed...');
-  events.ReceivedOrder.attach((order) => {
+  events.ReceivedOrder.push((order) => {
     console.log('Google sheet: new order received, logging...');
     addOrder(order);
   });

@@ -1,12 +1,10 @@
-import { Evt } from 'evt';
-
 import subscribers from './subscribers';
 import { Events, TriggerRequest } from './types';
 
 // EVENTS
 
 const events: Events = {
-  ReceivedOrder: new Evt(),
+  ReceivedOrder: [],
 };
 
 // REGISTER
@@ -15,8 +13,10 @@ subscribers.forEach((subscriber) => {
   subscriber(events);
 });
 
-export const trigger = ({ type, payload }: TriggerRequest) => {
+export const trigger = async ({ type, payload }: TriggerRequest) => {
   if (type === 'RECEIVED_ORDER') {
-    events.ReceivedOrder.post(payload);
+    return Promise.all(events.ReceivedOrder.map((listener) => listener(payload)));
   }
+
+  return Promise.resolve();
 };

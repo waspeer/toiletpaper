@@ -1,5 +1,3 @@
-import { Evt } from 'evt';
-
 import { ServerRequestObject } from '#root/lib/server/types';
 
 // EVENTS
@@ -23,7 +21,7 @@ export type ReceivedOrderPayload = {
 };
 
 export interface Events {
-  ReceivedOrder: Evt<ReceivedOrderPayload>;
+  ReceivedOrder: ((payload: ReceivedOrderPayload) => void)[];
 }
 
 // SUBSCRIBER
