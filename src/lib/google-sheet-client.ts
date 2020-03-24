@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/camelcase */
-import Debug from 'debug';
 import { GoogleSpreadsheet, GoogleSpreadsheetWorksheet } from 'google-spreadsheet';
 
 import { ReceivedOrderPayload, Events } from '#root/lib/ledger/types';
@@ -20,8 +19,6 @@ export interface SheetRow {
   quantity?: number;
   status: string;
 }
-
-const debug = Debug('toiletpaper:google-sheet');
 
 export const getSheet = async () => {
   if (
@@ -59,12 +56,12 @@ export const addOrder = async ({
   shipping,
   ...rowData
 }: ReceivedOrderPayload) => {
-  debug('logger called for payment: %s', rowData.paymentId);
+  console.log('logger called for payment: %s', rowData.paymentId);
 
   const sheet = await sheetPromise;
 
   if (await orderAlreadyLogged(rowData.paymentId)) {
-    debug('order already logged: "%s"', rowData.paymentId);
+    console.log('order already logged: "%s"', rowData.paymentId);
     return;
   }
 
@@ -80,16 +77,16 @@ export const addOrder = async ({
   );
 
   if (+shipping) {
-    debug('add shipping: € %d', shipping);
+    console.log('add shipping: € %d', shipping);
     rows.push({ ...rowData, product: '✉︎ shipping ✉︎', total: shipping });
   }
 
   if (+donation) {
-    debug('add donation: € %d', donation);
+    console.log('add donation: € %d', donation);
     rows.push({ ...rowData, product: '♥️ donation ♥️', total: donation });
   }
 
-  debug(`logging ${rows.length} rows...`);
+  console.log(`logging ${rows.length} rows...`);
 
   sheet.addRows(rows);
 };
