@@ -88,8 +88,8 @@ export const addOrder = async ({
   }
 
   console.log(`logging ${rows.length} rows...`);
-
-  sheet.addRows(rows);
+  await sheet.addRows(rows);
+  console.log('logging successful');
 };
 
 export const subscribe = (events: Events) => {
