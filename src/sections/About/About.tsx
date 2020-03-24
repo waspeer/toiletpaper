@@ -9,21 +9,15 @@ const About = () => {
     <Wrapper>
       <Title>ABOUT</Title>
       <Paragraph>
-        Due to de coronavirus that spread the world rapidly this month, we weren’t able to finish
-        our tour and missed more then 2/3rds of the shows we’ve been looking forward to for a long
-        time. Not only does this mean missing our quality time with you beautiful people, it also
-        means a sudden drop in income for us and the team surrounding us.
+        Due to the coronavirus pandemic we weren’t able to finish our tour and missed 2/3rds of the
+        planned shows and income that should have gone to our team and band. We made a lot of
+        shirts, long sleeves, CD’s and LP’s to share with you during the tour, but right now most of
+        the merch is still with us at home doing nothing.
       </Paragraph>
       <Paragraph>
-        Everyone around us has been working really, really hard on our last record an we’re super
-        proud of what we did together. Sadly, we’ll not be able to share our live show with you for
-        a while, but we still have some cool stuff that should be enjoyed!
-      </Paragraph>
-      <Paragraph>
-        That’s why we launched operation toiletpaper. It’s a special Klangstof merchandise store
-        with a special discount on all our products to make the quarantine a little bit easier on
-        all of us. The profit that we make from selling these items will be equally shared among the
-        band members and team that were supposed to go on tour with us.
+        That’s why we launched operation toilet paper, so we can hopefully share it with you! The
+        profit that we make from selling these items will be equally shared among the band members
+        and team that were supposed to go on tour with us.
       </Paragraph>
       <Paragraph>
         <strong>
@@ -32,7 +26,7 @@ const About = () => {
         </strong>
       </Paragraph>
       <Paragraph>
-        Thank you for sticking with us during these weird times, and please stay safe and healthy :)
+        Thank you for sticking with us during these weird times, and please stay safe and healthy!
       </Paragraph>
       <Paragraph style={{ textAlign: 'center', fontSize: '1rem', fontWeight: 'bold' }}>
         X Klang
