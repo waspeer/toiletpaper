@@ -40,7 +40,9 @@ export default async function Ledger(req: NextApiRequest, res: NextApiResponse) 
     if ((paymentIntent as any).metadata.toiletpaper === 'true') {
       console.log('Payment intent was for operation toiletpaper');
       const metadata = parseMetadata(paymentIntent);
-      await trigger({ type: 'RECEIVED_ORDER', payload: metadata });
+      await trigger({ type: 'RECEIVED_ORDER', payload: metadata })
+        .then(() => console.log('ja maar waaorm weet niemand'))
+        .catch((e) => console.log('nee', e));
     }
   }
 
