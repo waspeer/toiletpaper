@@ -46,14 +46,6 @@ export const getSheet = async () => {
   return doc.sheetsByIndex[0] as GoogleSpreadsheetWorksheet;
 };
 
-const sheetPromise = getSheet();
-
-export const orderAlreadyLogged = async (paymentId: string) => {
-  const sheet = await sheetPromise;
-  const rows = await sheet.getRows<SheetRow>();
-  return rows.some((row) => row.paymentId === paymentId);
-};
-
 export const addOrder = async ({
   donation,
   products,
@@ -62,9 +54,10 @@ export const addOrder = async ({
 }: ReceivedOrderPayload) => {
   console.log('logger called for payment: %s', rowData.paymentId);
 
-  const sheet = await sheetPromise;
+  const sheet = await getSheet();
 
-  if (await orderAlreadyLogged(rowData.paymentId)) {
+  const savedRows = await sheet.getRows<SheetRow>();
+  if (savedRows.some((row) => row.paymentId === rowData.paymentId)) {
     console.log('order already logged: "%s"', rowData.paymentId);
     return;
   }
