@@ -21,7 +21,7 @@ export type ReceivedOrderPayload = {
 };
 
 export interface Events {
-  ReceivedOrder: ((payload: ReceivedOrderPayload) => void)[];
+  ReceivedOrder: ((payload: ReceivedOrderPayload) => Promise<void>)[];
 }
 
 // SUBSCRIBER

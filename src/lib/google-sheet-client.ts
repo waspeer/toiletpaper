@@ -94,8 +94,8 @@ export const addOrder = async ({
 
 export const subscribe = (events: Events) => {
   console.log('Google sheet: subscribed...');
-  events.ReceivedOrder.push((order) => {
+  events.ReceivedOrder.push(async (order) => {
     console.log('Google sheet: new order received, logging...');
-    addOrder(order);
+    return addOrder(order);
   });
 };
