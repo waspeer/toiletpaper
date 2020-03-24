@@ -29,6 +29,8 @@ import {
 
 const API_ENDPOINT = '/api/pay';
 
+console.log('asdfasdf', process.env.STRIPE_PUBLIC_KEY);
+
 export const stripePromise = loadStripe(process.env.STRIPE_PUBLIC_KEY || '', {
   apiVersion: '2020-03-02',
 });

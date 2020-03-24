@@ -10,6 +10,7 @@ import Alert from '#root/components/Alert';
 import Button from '#root/components/Button';
 import List from '#root/components/List';
 import Loading from '#root/components/Loading';
+import { DEFAULT_CURRENCY } from '#root/lib/constants';
 import { useCart } from '#root/lib/cart';
 import { LineItem as LineItemObject } from '#root/lib/cart/types';
 
@@ -27,8 +28,6 @@ import {
 interface Props {
   lineItems: LineItemObject[];
 }
-
-const DEFAULT_CURRENCY = 'EUR';
 
 const Checkout = ({ lineItems }: Props) => {
   const stripeElements = useElements();
