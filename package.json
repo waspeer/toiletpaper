@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "DEBUG=toiletpaper:* next dev",
     "build": "next build",
     "start": "next start",
     "code:check": "yarn code:lint; yarn code:format --check",
@@ -23,6 +23,7 @@
     "color": "^3.1.2",
     "currency-symbol-map": "^4.0.4",
     "dayjs": "^1.8.23",
+    "debug": "^4.1.1",
     "dotenv": "^8.2.0",
     "evt": "^1.0.12",
     "google-spreadsheet": "^3.0.10",
@@ -47,6 +48,7 @@
   "devDependencies": {
     "@types/body-parser": "^1.19.0",
     "@types/color": "^3.0.1",
+    "@types/debug": "^4.1.5",
     "@types/node": "^13.9.1",
     "@types/node-fetch": "^2.5.5",
     "@types/react": "^16.9.23",

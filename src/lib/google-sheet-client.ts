@@ -1,9 +1,8 @@
 /* eslint-disable @typescript-eslint/camelcase */
+import Debug from 'debug';
 import { GoogleSpreadsheet, GoogleSpreadsheetWorksheet } from 'google-spreadsheet';
 
 import { ReceivedOrderPayload, Events } from '#root/lib/ledger/types';
-
-import credentials from './google-cred.json';
 
 export interface SheetRow {
   address: string;
@@ -22,13 +21,24 @@ export interface SheetRow {
   status: string;
 }
 
-const getSheet = async () => {
-  if (!process.env.GOOGLE_SHEET_ID) {
-    throw new Error('GOOGLE SHEET: Spreadsheet ID should be set in environment variables.');
+const debug = Debug('toiletpaper:google-sheet');
+
+export const getSheet = async () => {
+  if (
+    !process.env.GOOGLE_SHEET_ID ||
+    !process.env.GOOGLE_CLIENT_EMAIL ||
+    !process.env.GOOGLE_PRIVATE_KEY
+  ) {
+    throw new Error('GOOGLE SHEET: Credentials should be set in environment variables.');
   }
 
   const doc = new GoogleSpreadsheet(process.env.GOOGLE_SHEET_ID);
-  await doc.useServiceAccountAuth(credentials);
+
+  await doc.useServiceAccountAuth({
+    client_email: process.env.GOOGLE_CLIENT_EMAIL,
+    private_key: JSON.parse(`"${process.env.GOOGLE_PRIVATE_KEY || ''}"`),
+  });
+
   await doc.loadInfo();
   return doc.sheetsByIndex[0] as GoogleSpreadsheetWorksheet;
 };
@@ -47,13 +57,12 @@ export const addOrder = async ({
   shipping,
   ...rowData
 }: ReceivedOrderPayload) => {
-  console.log('logger called');
+  debug('logger called for payment: %s', rowData.paymentId);
 
   const sheet = await sheetPromise;
 
   if (await orderAlreadyLogged(rowData.paymentId)) {
-    console.log('order already logged', rowData.paymentId);
-
+    debug('order already logged: "%s"', rowData.paymentId);
     return;
   }
 
@@ -69,23 +78,21 @@ export const addOrder = async ({
   );
 
   if (+shipping) {
-    console.log('add shipping', shipping);
+    debug('add shipping: € %d', shipping);
     rows.push({ ...rowData, product: '✉︎ shipping ✉︎', total: shipping });
   }
 
   if (+donation) {
-    console.log('add donation', donation);
+    debug('add donation: € %d', donation);
     rows.push({ ...rowData, product: '♥️ donation ♥️', total: donation });
   }
 
-  console.log(`logging ${rows.length} rows`);
+  debug(`logging ${rows.length} rows...`);
 
   sheet.addRows(rows);
 };
 
 export const subscribe = (events: Events) => {
-  console.log('logger registered');
-
   events.ReceivedOrder.attach((order) => {
     addOrder(order);
   });
