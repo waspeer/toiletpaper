@@ -2,6 +2,7 @@ import Link from 'next/link';
 import React from 'react';
 
 import { Title } from '#root/components/Typography';
+import { DISCOUNT } from '#root/lib/constants';
 import { Product as ShopifyProduct } from '#root/lib/shopify/types';
 
 import { ImageWrapper, OldPrice, Wrapper, NewPrice, PriceWrapper } from './_styles';
@@ -12,8 +13,6 @@ interface Props {
   price: ShopifyProduct['variants'][0]['price'];
   title: ShopifyProduct['title'];
 }
-
-const DISCOUNT = 0.81;
 
 const Product = ({ handle, images, price, title }: Props) => {
   const formatPriceAmount = new Intl.NumberFormat('nl-Nl', {
