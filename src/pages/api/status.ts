@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { getSheet } from '#root/lib/google-sheet-client';
 
-export default async function Status(req: NextApiRequest, res: NextApiResponse) {
+export default async function Status(_req: NextApiRequest, res: NextApiResponse) {
   try {
     await getSheet();
     res.json(makeResponse(true));
