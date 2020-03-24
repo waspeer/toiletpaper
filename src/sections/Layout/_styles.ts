@@ -3,8 +3,6 @@ import styled from 'styled-components';
 import { colors } from '#root/style';
 
 export const Header = styled.div`
-  @import url('https://fonts.googleapis.com/css?family=Roboto+Mono&display=swap');
-
   text-align: center;
   margin-bottom: 3rem;
 

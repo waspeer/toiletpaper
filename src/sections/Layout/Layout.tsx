@@ -1,4 +1,5 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
+import Head from 'next/head';
 import Link from 'next/link';
 import React from 'react';
 
@@ -18,6 +19,9 @@ const Layout = ({ children }: Props) => {
 
   return (
     <>
+      <Head>
+        <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet" />
+      </Head>
       <Header>
         <Title>Operation Toiletpaper</Title>
         <Menu>
