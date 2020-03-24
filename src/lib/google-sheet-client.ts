@@ -65,6 +65,8 @@ export const addOrder = async ({
     return;
   }
 
+  console.log('order has not yet been logged');
+
   const rows = [] as SheetRow[];
 
   rows.push(
@@ -92,7 +94,9 @@ export const addOrder = async ({
 };
 
 export const subscribe = (events: Events) => {
+  console.log('Google sheet: subscribed...');
   events.ReceivedOrder.attach((order) => {
+    console.log('Google sheet: new order received, logging...');
     addOrder(order);
   });
 };
