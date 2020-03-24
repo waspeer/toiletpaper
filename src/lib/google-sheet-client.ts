@@ -29,6 +29,8 @@ export const getSheet = async () => {
     throw new Error('GOOGLE SHEET: Credentials should be set in environment variables.');
   }
 
+  console.log('Retrieving google sheet');
+
   const doc = new GoogleSpreadsheet(process.env.GOOGLE_SHEET_ID);
 
   await doc.useServiceAccountAuth({
@@ -37,6 +39,8 @@ export const getSheet = async () => {
       .replace(/\\n/g, '\n')
       .replace(/\\u003d/g, '='),
   });
+
+  console.log('Google sheet authenticated');
 
   await doc.loadInfo();
   return doc.sheetsByIndex[0] as GoogleSpreadsheetWorksheet;
