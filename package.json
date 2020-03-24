@@ -23,6 +23,7 @@
     "color": "^3.1.2",
     "currency-symbol-map": "^4.0.4",
     "dayjs": "^1.8.23",
+    "dotenv": "^8.2.0",
     "evt": "^1.0.12",
     "google-spreadsheet": "^3.0.10",
     "next": "9.3.0",

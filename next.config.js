@@ -1,9 +1,15 @@
 const { resolve } = require('path');
+const dotEnvResult = require('dotenv').config();
 
-try {
-  const env = require('./env');
-} catch {
-  const env = {};
+if (dotEnvResult.error) {
+  throw dotEnvResult.error;
+}
+
+const parsedVariables = dotEnvResult.parsed || {};
+const env = {};
+
+for (const key of Object.keys(parsedVariables)) {
+  env[key] = process.env[key];
 }
 
 module.exports = {
