@@ -11,6 +11,10 @@ export const Wrapper = styled.div`
   ${up('md')} {
     grid-template-columns: repeat(2, 1fr);
   }
+
+  ${down('md')} {
+    padding: 0 1rem;
+  }
 `;
 
 export const ColLeft = styled.div`
@@ -20,6 +24,12 @@ export const ColLeft = styled.div`
 
   ${up('md')} {
     margin-right: 0.5rem;
+  }
+
+  img {
+    height: 100%;
+    object-fit: contain;
+    width: 100%;
   }
 `;
 
