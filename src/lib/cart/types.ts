@@ -47,8 +47,8 @@ export type CartContext = Cart & {
 };
 
 export interface LineItem {
-  donation: number;
   discountPrice: number;
+  donation: number;
   quantity: number;
   title: string;
   total: number;
