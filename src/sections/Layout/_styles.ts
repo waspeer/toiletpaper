@@ -1,3 +1,4 @@
+import { down } from 'styled-breakpoints';
 import styled from 'styled-components';
 
 import { colors } from '#root/style';
@@ -17,12 +18,20 @@ export const Header = styled.div`
     border-style: solid;
     border-width: 10px 10px 10px 10px;
     border-image: url('/paper-border.png') 160 160 160 160 repeat repeat;
+
+    ${down('md')} {
+      font-size: 3rem;
+    }
   }
 `;
 
 export const Menu = styled.ul`
   list-style: none;
   padding: 0;
+
+  ${down('md')} {
+    font-size: 0.825rem;
+  }
 
   & a {
     color: ${colors.dark.fade(0.3)};
