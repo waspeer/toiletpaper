@@ -68,6 +68,8 @@ const ProductForm = ({ description, image, options, productId, title, variants }
   }, [productId]);
 
   // METHODS
+  const [wasSubmitted, setWasSubmitted] = useState(false);
+
   const resetForm = () => {
     setQuantity(1);
     setOffer(price.amount * DISCOUNT);
@@ -76,8 +78,21 @@ const ProductForm = ({ description, image, options, productId, title, variants }
   const onSubmit = () => {
     addItemToCart({ variantId, donation, quantity });
     resetForm();
+    setWasSubmitted(true);
     notify('The item was added to your cart!');
   };
+
+  useEffect(() => {
+    let interval: number | undefined;
+
+    if (wasSubmitted) {
+      interval = setInterval(() => setWasSubmitted(false), 1000);
+    }
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, [wasSubmitted]);
 
   const onOptionChange = useCallback(
     (name: string, value: string) => setSelectedOptions((state) => ({ ...state, [name]: value })),
@@ -116,7 +131,7 @@ const ProductForm = ({ description, image, options, productId, title, variants }
           )}
           <Party donation={donation} />
           <Button block size="large" disabled={!available} type="primary" onClick={onSubmit}>
-            Add to cart
+            {wasSubmitted ? '✓' : 'Add to cart'}
           </Button>
         </Form>
       </ColRight>
