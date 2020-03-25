@@ -23,6 +23,7 @@ type Context = Omit<CartObject, 'products'> & {
   authenticationError: string;
   formErrors: Map<keyof FormData, string>;
   hasProducts: boolean;
+  mailinglist: boolean;
   paymentMethod: 'card' | 'ideal';
   paymentMethodValid: boolean;
 };
@@ -37,6 +38,7 @@ type Events =
   | { type: 'SUCCESS' }
   | { type: 'UPDATE_BILLING_DETAILS'; name: string; value: string }
   | { type: 'UPDATE_DONATION'; donation: number }
+  | { type: 'UPDATE_MAILINGLIST'; value: boolean }
   | { type: 'UPDATE_PAYMENT_METHOD'; isValid?: boolean; method?: Context['paymentMethod'] }
   | { type: 'VALIDATION_ERROR'; errors: Context['formErrors'] }
   | { type: 'REVALIDATE'; errors: Context['formErrors'] }
@@ -75,6 +77,7 @@ const getCheckoutMachine = ({ cart }: { cart: CartObject }) => {
     ...pick(cart, ['billingDetails', 'donation', 'shippingCosts']),
     authenticationError: '',
     formErrors: new Map(),
+    mailinglist: true,
     hasProducts: !!cart.products.length,
     paymentMethod: 'card',
     paymentMethodValid: false,
@@ -117,6 +120,10 @@ const getCheckoutMachine = ({ cart }: { cart: CartObject }) => {
             UPDATE_DONATION: {
               target: '',
               actions: [assign({ donation: (_, e) => +e.donation }), 'updateStoredDonation'],
+            },
+            UPDATE_MAILINGLIST: {
+              target: '',
+              actions: assign({ mailinglist: (_, { value }) => value }),
             },
             UPDATE_PAYMENT_METHOD: {
               target: '',
@@ -175,10 +182,10 @@ const getCheckoutMachine = ({ cart }: { cart: CartObject }) => {
       },
       services: {
         authenticateOrder: async (
-          { billingDetails, donation, paymentMethod },
+          { billingDetails, donation, mailinglist, paymentMethod },
           { products, stripeElement },
         ) => {
-          const order: CheckoutOrder = { billingDetails, donation, products };
+          const order: CheckoutOrder = { billingDetails, donation, mailinglist, products };
 
           const result = await handlePayment({
             element: stripeElement,
@@ -190,10 +197,10 @@ const getCheckoutMachine = ({ cart }: { cart: CartObject }) => {
           return Promise.reject(result.error);
         },
         checkPaymentStatus: async (
-          { billingDetails, donation },
+          { billingDetails, donation, mailinglist },
           { clientSecret, products, paymentId },
         ) => {
-          const order: CheckoutOrder = { billingDetails, donation, products };
+          const order: CheckoutOrder = { billingDetails, donation, mailinglist, products };
 
           const result = await checkPaymentStatus({ clientSecret, order, paymentId });
 

@@ -10,6 +10,7 @@ export type ReceivedOrderPayload = {
   date: string;
   donation: number;
   email: string;
+  mailinglist: boolean;
   name: string;
   paymentId: string;
   postalCode: string;

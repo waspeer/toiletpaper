@@ -66,6 +66,7 @@ function calculateOrderTotal({ donation, lineItems, shippingCosts }: ServerOrder
 function makeMetaData({
   billingDetails,
   donation,
+  mailinglist,
   lineItems,
   shippingCosts,
 }: ServerOrder): Record<string, string> {
@@ -78,6 +79,7 @@ function makeMetaData({
   return {
     billingDetails: JSON.stringify(billingDetails, null, 2),
     donation: String(donation),
+    mailinglist: String(mailinglist),
     order: JSON.stringify(parsedLineItems, null, 2),
     shippingCosts: String(shippingCosts),
     toiletpaper: 'true',

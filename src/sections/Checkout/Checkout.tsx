@@ -8,6 +8,8 @@ import smoothscroll from 'smoothscroll-polyfill';
 
 import Alert from '#root/components/Alert';
 import Button from '#root/components/Button';
+import Checkbox from '#root/components/Checkbox';
+import Label from '#root/components/Label';
 import List from '#root/components/List';
 import Loading from '#root/components/Loading';
 import { DEFAULT_CURRENCY } from '#root/lib/constants';
@@ -56,6 +58,7 @@ const Checkout = ({ lineItems }: Props) => {
     billingDetails,
     donation,
     formErrors: formErrorMap,
+    mailinglist,
     paymentMethodValid,
     paymentMethod,
     shippingCosts,
@@ -82,6 +85,11 @@ const Checkout = ({ lineItems }: Props) => {
     [send],
   );
 
+  const handleMailinglistChange = useCallback(
+    (value: boolean) => send({ type: 'UPDATE_MAILINGLIST', value }),
+    [send],
+  );
+
   const handlePaymentMethodChange = useCallback(
     ({ isValid, method }: { isValid?: boolean; method?: 'card' | 'ideal' }) =>
       send({ type: 'UPDATE_PAYMENT_METHOD', isValid, method }),
@@ -92,7 +100,9 @@ const Checkout = ({ lineItems }: Props) => {
     (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
 
-      if (!(formIsValid && stripeElements)) return;
+      console.log('asdfasdf');
+
+      if (!stripeElements) return;
 
       const stripeElement =
         paymentMethod === 'card'
@@ -101,7 +111,7 @@ const Checkout = ({ lineItems }: Props) => {
 
       send({ type: 'SUBMIT', products: cart.products, stripeElement });
     },
-    [cart.products, formIsValid, paymentMethod, send, stripeElements],
+    [cart.products, paymentMethod, send, stripeElements],
   );
 
   useEffect(() => {
@@ -177,6 +187,10 @@ const Checkout = ({ lineItems }: Props) => {
         formErrors={formErrors}
         onChange={handleBillingDetailsChange}
       />
+      <Label style={{ marginBottom: '2.5rem' }}>
+        <Checkbox checked={mailinglist} onChange={handleMailinglistChange} />I want to sign up for
+        the Klangstof newsletter! ✨
+      </Label>
       <Title>Payment</Title>
       <PaymentForm
         disabled={current.matches('authenticating')}

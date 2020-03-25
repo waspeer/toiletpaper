@@ -9,12 +9,14 @@ import { ServerRequestObject } from '#root/lib/server/types';
 export interface CheckoutOrder {
   billingDetails: CartObject['billingDetails'];
   donation: number;
+  mailinglist: boolean;
   products: CartObject['products'];
 }
 
 export type ServerOrder = Omit<CheckoutOrder, 'products'> & {
   currencyCode: string;
   lineItems: LineItem[];
+  mailinglist: boolean;
   paymentId: string;
   shippingCosts: number;
 };

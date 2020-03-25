@@ -84,6 +84,7 @@ function parseMetadata(paymentIntent: PaymentIntent): ReceivedOrderPayload {
     currencyCode: paymentIntent.currency,
     date: dayjs.unix(paymentIntent.created).format('DD-MM-YYYY HH:mm:ss'),
     donation: +metadata.donation || 0,
+    mailinglist: metadata.mailinglist === 'true',
     paymentId: paymentIntent.id,
     processed: '',
     products,

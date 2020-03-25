@@ -10,6 +10,7 @@ export interface SheetRow {
   currencyCode: string;
   date: string;
   email: string;
+  mailinglist: boolean;
   name: string;
   paymentId: string;
   postalCode: string;
