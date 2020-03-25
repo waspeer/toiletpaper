@@ -1,3 +1,4 @@
+import { down } from 'styled-breakpoints';
 import styled from 'styled-components';
 
 export const Wrapper = styled.div`
@@ -5,6 +6,10 @@ export const Wrapper = styled.div`
   margin: 0 auto;
   text-align: justify;
   text-align-last: center;
+
+  ${down('md')} {
+    padding: 0 1rem;
+  }
 
   h1 {
     text-align: center;
