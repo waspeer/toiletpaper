@@ -3,7 +3,7 @@
     "env": {
       "GOOGLE_CLIENT_EMAIL": "@toiletpaper-google-client-email",
       "GOOGLE_PRIVATE_KEY": "@toiletpaper-google-private-key",
-      "GOOGLE_SHEET_ID": "@toiletpaper-google-sheet-id",
+      "GOOGLE_SHEET_ID": "@toiletpaper-google-sheet-id-staging",
       "SHOPIFY_COLLECTION_ID": "@toiletpaper-shopify-collection-id",
       "SHOPIFY_DOMAIN": "@toiletpaper-shopify-domain",
       "SHOPIFY_TOKEN": "@toiletpaper-shopify-token",
@@ -11,15 +11,15 @@
       "SMTP_PORT": "@toiletpaper-smtp-port",
       "SMTP_USER": "@toiletpaper-smtp-user",
       "SMTP_PASSWORD": "@toiletpaper-smtp-password",
-      "STRIPE_WEBHOOK_SECRET": "@toiletpaper-stripe-webhook-secret",
-      "STRIPE_PUBLIC_KEY": "@toiletpaper-stripe-public-key",
-      "STRIPE_SECRET": "@toiletpaper-stripe-secret"
+      "STRIPE_WEBHOOK_SECRET": "@toiletpaper-stripe-webhook-secret-staging",
+      "STRIPE_PUBLIC_KEY": "@toiletpaper-stripe-public-key-staging",
+      "STRIPE_SECRET": "@toiletpaper-stripe-secret-staging"
     }
   },
   "env": {
     "GOOGLE_CLIENT_EMAIL": "@toiletpaper-google-client-email",
     "GOOGLE_PRIVATE_KEY": "@toiletpaper-google-private-key",
-    "GOOGLE_SHEET_ID": "@toiletpaper-google-sheet-id",
+    "GOOGLE_SHEET_ID": "@toiletpaper-google-sheet-id-staging",
     "SHOPIFY_COLLECTION_ID": "@toiletpaper-shopify-collection-id",
     "SHOPIFY_DOMAIN": "@toiletpaper-shopify-domain",
     "SHOPIFY_TOKEN": "@toiletpaper-shopify-token",
@@ -27,8 +27,8 @@
     "SMTP_PORT": "@toiletpaper-smtp-port",
     "SMTP_USER": "@toiletpaper-smtp-user",
     "SMTP_PASSWORD": "@toiletpaper-smtp-password",
-    "STRIPE_WEBHOOK_SECRET": "@toiletpaper-stripe-webhook-secret",
-    "STRIPE_PUBLIC_KEY": "@toiletpaper-stripe-public-key",
-    "STRIPE_SECRET": "@toiletpaper-stripe-secret"
+    "STRIPE_WEBHOOK_SECRET": "@toiletpaper-stripe-webhook-secret-staging",
+    "STRIPE_PUBLIC_KEY": "@toiletpaper-stripe-public-key-staging",
+    "STRIPE_SECRET": "@toiletpaper-stripe-secret-staging"
   }
 }
