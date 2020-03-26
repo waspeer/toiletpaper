@@ -162,13 +162,12 @@ export function mapBillingDetails({
 
 export function makeOrderObject({
   collection,
-  donation: checkoutDonation,
+  donation,
   paymentId,
   products,
   ...order
 }: CheckoutOrder & { collection: NormalizedShopifyData; paymentId: string }): ServerOrder {
   const lineItems = mapCartProductsToLineItems(collection, products);
-  const lineItemDonations = lineItems.reduce((acc, { donation }) => acc + donation, 0);
   const shippingCosts = lineItems.length ? SHIPPING_COSTS : 0;
   const currencyCode = lineItems.length
     ? lineItems[0].variant.price.currencyCode
@@ -177,7 +176,7 @@ export function makeOrderObject({
   return {
     ...order,
     currencyCode,
-    donation: checkoutDonation + lineItemDonations,
+    donation,
     lineItems,
     paymentId,
     shippingCosts,
