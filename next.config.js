@@ -14,6 +14,7 @@ module.exports = {
     STRIPE_SECRET: process.env.STRIPE_SECRET,
   },
   webpack(config, { dev, isServer }) {
+    config.module.rules.push({ test: /\.html$/i, loader: 'html-loader' });
     config.resolve.alias['#root'] = resolve(__dirname, 'src');
     return config;
   },
