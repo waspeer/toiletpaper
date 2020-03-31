@@ -34,7 +34,7 @@
     "nodemailer": "^6.4.6",
     "rc-input-number": "^4.5.6",
     "rc-notification": "^4.0.0",
-    "react": "16.13.0",
+    "react": "16.13.1",
     "react-animated-text": "^0.1.4",
     "react-country-region-selector": "^2.1.0",
     "react-dom": "16.13.0",
