@@ -1,7 +1,5 @@
 {
-  /* Poetic base style configuration */
   "extends": "./node_modules/poetic/config/typescript/tsconfig.json",
-  /* Add your custom configuration after this */
   "compilerOptions": {
     "target": "es5",
     "lib": ["dom", "dom.iterable", "esnext"],
