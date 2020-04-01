@@ -37,7 +37,7 @@
     "react": "16.13.1",
     "react-animated-text": "^0.1.4",
     "react-country-region-selector": "^2.1.0",
-    "react-dom": "16.13.0",
+    "react-dom": "16.13.1",
     "shopify-buy": "^2.9.2",
     "smoothscroll-polyfill": "^0.4.4",
     "stripe": "^8.38.0",
