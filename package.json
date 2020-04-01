@@ -54,7 +54,7 @@
     "@types/node": "^13.9.8",
     "@types/node-fetch": "^2.5.5",
     "@types/nodemailer": "^6.4.0",
-    "@types/react": "^16.9.30",
+    "@types/react": "^16.9.31",
     "@types/react-dom": "^16.9.5",
     "@types/shopify-buy": "^1.11.0",
     "@types/smoothscroll-polyfill": "^0.3.1",
