@@ -61,3 +61,12 @@ export const MenuItem = styled.li`
     width: 1rem;
   }
 `;
+
+export const Ended = styled.div`
+  align-items: center;
+  display: flex;
+  flex-flow: column;
+  height: 100vh;
+  justify-content: center;
+  text-align: center;
+`;
