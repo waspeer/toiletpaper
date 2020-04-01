@@ -972,10 +972,10 @@
   resolved "https://registry.yarnpkg.com/@sindresorhus/class-names/-/class-names-1.1.0.tgz#0169df27fcd7cdc0cf565cbd4ee9f30095fa4a0d"
   integrity sha512-08ZNyv6o1ynBFg+JuMOxGikXiF6TU9Y7xr3Nzb6r6e/D5OAOU+W+BS+BV2AQqpXOqFLYrGLow2Mc2PlRc4bNoQ==
 
-"@stripe/react-stripe-js@^1.0.3":
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/@stripe/react-stripe-js/-/react-stripe-js-1.0.3.tgz#92224921d157728a3e11ce68ca5e5cb6fec37647"
-  integrity sha512-9E0HRAyd95B1jSS+nh5ol4M5RvQUnWTCB+Td9xKKa68OrEvmRqpNy/wvMyY9SGCy7fcMkZfiST9Oy09OkkDM/A==
+"@stripe/react-stripe-js@^1.1.1":
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/@stripe/react-stripe-js/-/react-stripe-js-1.1.1.tgz#1faa6cc88408ad72043a6d6b48d6877cc251f9ea"
+  integrity sha512-P4zjP7r3jqT59CrwY8BLGdpPom8WUcMKSECj5meAVbzr0Xy1Mad7uovz4Z+I84icuAI9KdO3uJzmvegTa3f+tA==
   dependencies:
     prop-types "^15.7.2"
 
