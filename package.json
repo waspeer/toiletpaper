@@ -61,7 +61,7 @@
     "@types/styled-components": "^5.0.1",
     "@types/yup": "^0.26.34",
     "eslint-import-resolver-typescript": "^2.0.0",
-    "html-loader": "^1.0.0",
+    "html-loader": "^1.1.0",
     "poetic": "^1.5.0",
     "typescript": "^3.8.3"
   }
